@@ -7,8 +7,22 @@ authors = [
     { name = "mlegesse3", email = "zainm2432003@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "alembic>=1.16,<2",
+    "psycopg>=3.2,<4",
+    "pydantic-settings>=2,<3",
+    "sqlalchemy>=2.0,<3",
+]
 
 [build-system]
 requires = ["uv_build>=0.11.32,<0.12.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13,<2",
+    "psycopg[binary]>=3.2,<4",
+    "pytest>=8,<9",
+    "pytest-cov>=6,<7",
+    "ruff>=0.8,<1",
+]
