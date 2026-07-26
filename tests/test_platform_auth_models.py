@@ -1,6 +1,11 @@
 """Tests for platform authentication session and token models."""
 
-from sqlalchemy import CheckConstraint, ForeignKey, UniqueConstraint
+from sqlalchemy import (
+    CheckConstraint,
+    ForeignKey,
+    ForeignKeyConstraint,
+    UniqueConstraint,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 
 from security_system_database import Base
@@ -46,6 +51,46 @@ def _foreign_key_by_column(table_name: str, column_name: str) -> ForeignKey:
     return foreign_keys[0]
 
 
+def _foreign_key_constraint_by_name(
+    table_name: str,
+    constraint_name: str,
+) -> ForeignKeyConstraint:
+    matching_constraints = [
+        constraint
+        for constraint in Base.metadata.tables[table_name].foreign_key_constraints
+        if constraint.name == constraint_name
+    ]
+
+    assert len(matching_constraints) == 1
+
+    return matching_constraints[0]
+
+
+def _foreign_key_by_name(table_name: str, foreign_key_name: str) -> ForeignKey:
+    matching_foreign_keys = [
+        foreign_key
+        for foreign_key_constraint in Base.metadata.tables[
+            table_name
+        ].foreign_key_constraints
+        for foreign_key in foreign_key_constraint.elements
+        if foreign_key.name == foreign_key_name
+    ]
+
+    assert len(matching_foreign_keys) == 1
+
+    return matching_foreign_keys[0]
+
+
+def _foreign_key_constraint_targets(
+    constraint: ForeignKeyConstraint,
+) -> tuple[tuple[str, ...], tuple[str, ...], set[str | None]]:
+    return (
+        tuple(constraint.columns.keys()),
+        tuple(element.target_fullname for element in constraint.elements),
+        {element.ondelete for element in constraint.elements},
+    )
+
+
 def _assert_no_raw_token_columns(table_name: str) -> None:
     raw_token_columns = {
         "token",
@@ -83,6 +128,9 @@ def test_platform_user_session_columns_constraints_indexes_and_foreign_key() -> 
         "updated_at",
     }.issubset(table.columns.keys())
     assert ("session_token_hash",) in _unique_constraint_columns(
+        "platform_user_sessions"
+    )
+    assert ("platform_user_id", "id") in _unique_constraint_columns(
         "platform_user_sessions"
     )
     assert "ck_platform_user_sessions_status_valid" in _check_constraint_names(
@@ -142,18 +190,23 @@ def test_platform_refresh_token_columns_constraints_indexes_and_foreign_keys() -
     assert table.c.status.server_default is not None
     _assert_no_raw_token_columns("platform_refresh_tokens")
 
-    platform_user_fk = _foreign_key_by_column(
+    platform_user_fk = _foreign_key_by_name(
         "platform_refresh_tokens",
-        "platform_user_id",
+        "fk_platform_refresh_tokens_platform_user_id",
     )
-    session_fk = _foreign_key_by_column("platform_refresh_tokens", "session_id")
+    session_fk = _foreign_key_constraint_by_name(
+        "platform_refresh_tokens",
+        "fk_platform_refresh_tokens_platform_user_session",
+    )
 
     assert platform_user_fk.name == "fk_platform_refresh_tokens_platform_user_id"
     assert platform_user_fk.target_fullname == "platform_users.id"
     assert platform_user_fk.ondelete == "CASCADE"
-    assert session_fk.name == "fk_platform_refresh_tokens_session_id"
-    assert session_fk.target_fullname == "platform_user_sessions.id"
-    assert session_fk.ondelete == "CASCADE"
+    assert _foreign_key_constraint_targets(session_fk) == (
+        ("platform_user_id", "session_id"),
+        ("platform_user_sessions.platform_user_id", "platform_user_sessions.id"),
+        {"CASCADE"},
+    )
 
 
 def test_platform_password_reset_token_columns_constraints_indexes_and_foreign_key() -> (

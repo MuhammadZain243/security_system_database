@@ -185,6 +185,11 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_platform_user_sessions")),
         sa.UniqueConstraint(
+            "platform_user_id",
+            "id",
+            name="uq_platform_user_sessions_platform_user_id_id",
+        ),
+        sa.UniqueConstraint(
             "session_token_hash", name="uq_platform_user_sessions_session_token_hash"
         ),
     )
@@ -244,9 +249,9 @@ def upgrade() -> None:
             ondelete="CASCADE",
         ),
         sa.ForeignKeyConstraint(
-            ["session_id"],
-            ["platform_user_sessions.id"],
-            name="fk_platform_refresh_tokens_session_id",
+            ["platform_user_id", "session_id"],
+            ["platform_user_sessions.platform_user_id", "platform_user_sessions.id"],
+            name="fk_platform_refresh_tokens_platform_user_session",
             ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_platform_refresh_tokens")),

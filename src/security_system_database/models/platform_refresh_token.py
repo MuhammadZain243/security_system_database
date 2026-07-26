@@ -6,6 +6,7 @@ from uuid import UUID
 from sqlalchemy import (
     CheckConstraint,
     ForeignKey,
+    ForeignKeyConstraint,
     Index,
     String,
     UniqueConstraint,
@@ -27,6 +28,12 @@ class PlatformRefreshToken(Base, UUIDPrimaryKeyMixin, TimestampMixin):
             "status IN ('active', 'revoked', 'expired', 'rotated')",
             name="status_valid",
         ),
+        ForeignKeyConstraint(
+            ["platform_user_id", "session_id"],
+            ["platform_user_sessions.platform_user_id", "platform_user_sessions.id"],
+            name="fk_platform_refresh_tokens_platform_user_session",
+            ondelete="CASCADE",
+        ),
         UniqueConstraint("token_hash", name="uq_platform_refresh_tokens_token_hash"),
         Index("ix_platform_refresh_tokens_expires_at", "expires_at"),
         Index("ix_platform_refresh_tokens_platform_user_id", "platform_user_id"),
@@ -45,11 +52,6 @@ class PlatformRefreshToken(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     )
     session_id: Mapped[UUID] = mapped_column(
         UUID_TYPE,
-        ForeignKey(
-            "platform_user_sessions.id",
-            name="fk_platform_refresh_tokens_session_id",
-            ondelete="CASCADE",
-        ),
         nullable=False,
     )
     token_hash: Mapped[str] = mapped_column(String(255), nullable=False)

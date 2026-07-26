@@ -31,6 +31,11 @@ class PlatformUserSession(Base, UUIDPrimaryKeyMixin, TimestampMixin):
             "session_token_hash",
             name="uq_platform_user_sessions_session_token_hash",
         ),
+        UniqueConstraint(
+            "platform_user_id",
+            "id",
+            name="uq_platform_user_sessions_platform_user_id_id",
+        ),
         Index("ix_platform_user_sessions_expires_at", "expires_at"),
         Index("ix_platform_user_sessions_platform_user_id", "platform_user_id"),
         Index("ix_platform_user_sessions_status", "status"),
