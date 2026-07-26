@@ -13,6 +13,7 @@ from security_system_database.models.mixins import (
     UUIDPrimaryKeyMixin,
 )
 from security_system_database.models.module import Module
+from security_system_database.models.permission import Permission
 from security_system_database.models.platform_integration_provider import (
     PlatformIntegrationProvider,
 )
@@ -25,6 +26,8 @@ from security_system_database.models.platform_role_permission import (
 from security_system_database.models.platform_setting import PlatformSetting
 from security_system_database.models.platform_user import PlatformUser
 from security_system_database.models.platform_user_role import PlatformUserRole
+from security_system_database.models.role import Role
+from security_system_database.models.role_permission import RolePermission
 from security_system_database.models.subscription_plan import SubscriptionPlan
 from security_system_database.models.subscription_plan_limit import (
     SubscriptionPlanLimit,
@@ -38,6 +41,8 @@ from security_system_database.models.types import (
     UUID_TYPE,
     ShortString,
 )
+from security_system_database.models.user import User
+from security_system_database.models.user_role import UserRole
 
 __all__ = [
     "DATETIME_TIMEZONE",
@@ -49,6 +54,7 @@ __all__ = [
     "CompanyAddOn",
     "CompanySubscription",
     "Module",
+    "Permission",
     "PlatformIntegrationProvider",
     "PlatformOAuthConfig",
     "PlatformPermission",
@@ -57,6 +63,8 @@ __all__ = [
     "PlatformSetting",
     "PlatformUser",
     "PlatformUserRole",
+    "Role",
+    "RolePermission",
     "ShortString",
     "SoftDeleteMixin",
     "SubscriptionPlan",
@@ -66,4 +74,6 @@ __all__ = [
     "TenantOwnershipMixin",
     "TimestampMixin",
     "UUIDPrimaryKeyMixin",
+    "User",
+    "UserRole",
 ]
