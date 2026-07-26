@@ -128,7 +128,7 @@ def upgrade() -> None:
         "platform_oauth_configs",
         sa.Column("provider_id", sa.UUID(), nullable=False),
         sa.Column("client_id", sa.String(length=255), nullable=False),
-        sa.Column("client_secret_encrypted", sa.Text(), nullable=False),
+        sa.Column("client_secret_encrypted", sa.Text(), nullable=True),
         sa.Column("redirect_uri", sa.String(length=500), nullable=False),
         sa.Column(
             "scopes",

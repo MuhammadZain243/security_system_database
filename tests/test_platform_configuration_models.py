@@ -124,6 +124,7 @@ def test_platform_oauth_config_columns_constraints_and_indexes() -> None:
         "deleted_at",
     }.issubset(table.columns.keys())
     assert "client_secret" not in table.columns
+    assert table.c.client_secret_encrypted.nullable is True
     assert ("provider_id",) in _unique_constraint_columns("platform_oauth_configs")
     assert "ix_platform_oauth_configs_status" in _index_names("platform_oauth_configs")
     assert "ck_platform_oauth_configs_status_valid" in _check_constraint_names(

@@ -54,7 +54,7 @@ class PlatformOAuthConfig(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteM
         nullable=False,
     )
     client_id: Mapped[str] = mapped_column(String(255), nullable=False)
-    client_secret_encrypted: Mapped[str] = mapped_column(Text, nullable=False)
+    client_secret_encrypted: Mapped[str | None] = mapped_column(Text, nullable=True)
     redirect_uri: Mapped[str] = mapped_column(String(500), nullable=False)
     scopes: Mapped[list[str]] = mapped_column(
         JSONB,
