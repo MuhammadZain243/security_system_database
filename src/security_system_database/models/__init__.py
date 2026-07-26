@@ -18,6 +18,9 @@ from security_system_database.models.platform_auth_event import PlatformAuthEven
 from security_system_database.models.platform_email_verification_token import (
     PlatformEmailVerificationToken,
 )
+from security_system_database.models.platform_integration_connection import (
+    PlatformIntegrationConnection,
+)
 from security_system_database.models.platform_integration_provider import (
     PlatformIntegrationProvider,
 )
@@ -72,6 +75,7 @@ __all__ = [
     "Permission",
     "PlatformAuthEvent",
     "PlatformEmailVerificationToken",
+    "PlatformIntegrationConnection",
     "PlatformIntegrationProvider",
     "PlatformOAuthConfig",
     "PlatformPasswordResetToken",
