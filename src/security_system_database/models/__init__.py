@@ -8,6 +8,7 @@ from security_system_database.models.mixins import (
     TimestampMixin,
     UUIDPrimaryKeyMixin,
 )
+from security_system_database.models.module import Module
 from security_system_database.models.platform_integration_provider import (
     PlatformIntegrationProvider,
 )
@@ -32,6 +33,7 @@ __all__ = [
     "UUID_TYPE",
     "AuditActorMixin",
     "Company",
+    "Module",
     "PlatformIntegrationProvider",
     "PlatformOAuthConfig",
     "PlatformPermission",
