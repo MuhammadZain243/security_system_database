@@ -1,5 +1,6 @@
 """Shared SQLAlchemy model helpers."""
 
+from security_system_database.models.company import Company
 from security_system_database.models.mixins import (
     AuditActorMixin,
     SoftDeleteMixin,
@@ -14,6 +15,7 @@ from security_system_database.models.platform_role_permission import (
 )
 from security_system_database.models.platform_user import PlatformUser
 from security_system_database.models.platform_user_role import PlatformUserRole
+from security_system_database.models.tenant import Tenant
 from security_system_database.models.types import (
     DATETIME_TIMEZONE,
     UUID_TYPE,
@@ -24,6 +26,7 @@ __all__ = [
     "DATETIME_TIMEZONE",
     "UUID_TYPE",
     "AuditActorMixin",
+    "Company",
     "PlatformPermission",
     "PlatformRole",
     "PlatformRolePermission",
@@ -31,6 +34,7 @@ __all__ = [
     "PlatformUserRole",
     "ShortString",
     "SoftDeleteMixin",
+    "Tenant",
     "TenantOwnershipMixin",
     "TimestampMixin",
     "UUIDPrimaryKeyMixin",
