@@ -308,7 +308,29 @@ uv run pytest tests/test_package.py
 
 ---
 
-## 8. Git Commands
+## 8. Seed Verification Commands
+
+### Check platform permissions
+
+```powershell
+docker compose exec postgres psql -U postgres -d security_system -c "SELECT key, name, category FROM platform_permissions ORDER BY key;"
+```
+
+### Check platform roles
+
+```powershell
+docker compose exec postgres psql -U postgres -d security_system -c "SELECT name, slug, is_system FROM platform_roles ORDER BY slug;"
+```
+
+### Count platform role permissions
+
+```powershell
+docker compose exec postgres psql -U postgres -d security_system -c "SELECT COUNT(*) FROM platform_role_permissions;"
+```
+
+---
+
+## 9. Git Commands
 
 ### Check changed files
 
@@ -336,7 +358,7 @@ git commit -m "chore: initialize database package"
 
 ---
 
-## 9. Recommended Daily Flow
+## 10. Recommended Daily Flow
 
 ### Start work
 
@@ -370,7 +392,7 @@ git status
 
 ---
 
-## 10. Short Version
+## 11. Short Version
 
 After changing database models, usually run:
 
