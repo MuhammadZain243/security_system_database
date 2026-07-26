@@ -88,7 +88,7 @@ def upgrade() -> None:
             ["platform_user_id"],
             ["platform_users.id"],
             name="fk_platform_email_verification_tokens_platform_user_id",
-            ondelete="CASCADE",
+            ondelete="RESTRICT",
         ),
         sa.PrimaryKeyConstraint(
             "id", name=op.f("pk_platform_email_verification_tokens")
@@ -126,7 +126,7 @@ def upgrade() -> None:
             ["platform_user_id"],
             ["platform_users.id"],
             name="fk_platform_password_reset_tokens_platform_user_id",
-            ondelete="CASCADE",
+            ondelete="RESTRICT",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_platform_password_reset_tokens")),
         sa.UniqueConstraint(
@@ -181,7 +181,7 @@ def upgrade() -> None:
             ["platform_user_id"],
             ["platform_users.id"],
             name="fk_platform_user_sessions_platform_user_id",
-            ondelete="CASCADE",
+            ondelete="RESTRICT",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_platform_user_sessions")),
         sa.UniqueConstraint(
@@ -246,7 +246,7 @@ def upgrade() -> None:
             ["platform_user_id"],
             ["platform_users.id"],
             name="fk_platform_refresh_tokens_platform_user_id",
-            ondelete="CASCADE",
+            ondelete="RESTRICT",
         ),
         sa.ForeignKeyConstraint(
             ["platform_user_id", "session_id"],
