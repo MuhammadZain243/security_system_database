@@ -33,6 +33,12 @@ from security_system_database.models.platform_role_permission import (
 )
 from security_system_database.models.platform_setting import PlatformSetting
 from security_system_database.models.platform_user import PlatformUser
+from security_system_database.models.platform_user_invitation import (
+    PlatformUserInvitation,
+)
+from security_system_database.models.platform_user_invitation_role import (
+    PlatformUserInvitationRole,
+)
 from security_system_database.models.platform_user_role import PlatformUserRole
 from security_system_database.models.platform_user_session import PlatformUserSession
 from security_system_database.models.role import Role
@@ -75,6 +81,8 @@ __all__ = [
     "PlatformRolePermission",
     "PlatformSetting",
     "PlatformUser",
+    "PlatformUserInvitation",
+    "PlatformUserInvitationRole",
     "PlatformUserRole",
     "PlatformUserSession",
     "Role",
