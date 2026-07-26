@@ -61,6 +61,9 @@ def upgrade() -> None:
             "currency = upper(currency)", name=op.f("ck_add_ons_currency_uppercase")
         ),
         sa.CheckConstraint(
+            "length(currency) = 3", name=op.f("ck_add_ons_currency_length_valid")
+        ),
+        sa.CheckConstraint(
             "price_amount >= 0", name=op.f("ck_add_ons_price_amount_non_negative")
         ),
         sa.CheckConstraint(
@@ -115,6 +118,10 @@ def upgrade() -> None:
         sa.CheckConstraint(
             "currency = upper(currency)",
             name=op.f("ck_subscription_plans_currency_uppercase"),
+        ),
+        sa.CheckConstraint(
+            "length(currency) = 3",
+            name=op.f("ck_subscription_plans_currency_length_valid"),
         ),
         sa.CheckConstraint(
             "price_amount >= 0",

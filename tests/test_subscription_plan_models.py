@@ -79,6 +79,9 @@ def test_subscription_plan_columns_constraints_and_indexes() -> None:
     assert "ck_subscription_plans_currency_uppercase" in _check_constraint_names(
         "subscription_plans"
     )
+    assert "ck_subscription_plans_currency_length_valid" in _check_constraint_names(
+        "subscription_plans"
+    )
     assert "ck_subscription_plans_status_valid" in _check_constraint_names(
         "subscription_plans"
     )
@@ -188,6 +191,7 @@ def test_add_on_columns_constraints_and_indexes() -> None:
     assert ("slug",) in _unique_constraint_columns("add_ons")
     assert "ck_add_ons_slug_lowercase" in _check_constraint_names("add_ons")
     assert "ck_add_ons_currency_uppercase" in _check_constraint_names("add_ons")
+    assert "ck_add_ons_currency_length_valid" in _check_constraint_names("add_ons")
     assert "ck_add_ons_status_valid" in _check_constraint_names("add_ons")
     assert "ck_add_ons_billing_interval_valid" in _check_constraint_names("add_ons")
     assert "ck_add_ons_price_amount_non_negative" in _check_constraint_names("add_ons")

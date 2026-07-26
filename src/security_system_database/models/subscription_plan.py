@@ -29,6 +29,7 @@ class SubscriptionPlan(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixi
     __table_args__ = (
         CheckConstraint("slug = lower(slug)", name="slug_lowercase"),
         CheckConstraint("currency = upper(currency)", name="currency_uppercase"),
+        CheckConstraint("length(currency) = 3", name="currency_length_valid"),
         CheckConstraint(
             "status IN ('active', 'inactive', 'archived')",
             name="status_valid",
