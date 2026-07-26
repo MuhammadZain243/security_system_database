@@ -70,6 +70,12 @@ def upgrade() -> None:
             "status IN ('active', 'inactive', 'needs_reconnect', 'revoked', 'error')",
             name=op.f("ck_platform_integration_connections_status_valid"),
         ),
+        sa.CheckConstraint(
+            "external_account_email IS NULL OR external_account_email = lower(external_account_email)",
+            name=op.f(
+                "ck_platform_integration_connections_external_account_email_lowercase"
+            ),
+        ),
         sa.ForeignKeyConstraint(
             ["connected_by_platform_user_id"],
             ["platform_users.id"],
@@ -119,7 +125,9 @@ def upgrade() -> None:
         "platform_integration_connections",
         ["provider_id", "external_account_id"],
         unique=True,
-        postgresql_where=sa.text("external_account_id IS NOT NULL"),
+        postgresql_where=sa.text(
+            "external_account_id IS NOT NULL AND deleted_at IS NULL"
+        ),
     )
     # ### end Alembic commands ###
 
@@ -130,7 +138,9 @@ def downgrade() -> None:
     op.drop_index(
         "uq_platform_integration_connections_provider_external_account",
         table_name="platform_integration_connections",
-        postgresql_where=sa.text("external_account_id IS NOT NULL"),
+        postgresql_where=sa.text(
+            "external_account_id IS NOT NULL AND deleted_at IS NULL"
+        ),
     )
     op.drop_index(
         "ix_platform_integration_connections_token_expires_at",

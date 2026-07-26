@@ -32,6 +32,10 @@ class PlatformIntegrationConnection(
             "status IN ('active', 'inactive', 'needs_reconnect', 'revoked', 'error')",
             name="status_valid",
         ),
+        CheckConstraint(
+            "external_account_email IS NULL OR external_account_email = lower(external_account_email)",
+            name="external_account_email_lowercase",
+        ),
         Index(
             "ix_platform_integration_connections_connected_by_user_id",
             "connected_by_platform_user_id",
@@ -51,7 +55,9 @@ class PlatformIntegrationConnection(
             "provider_id",
             "external_account_id",
             unique=True,
-            postgresql_where=text("external_account_id IS NOT NULL"),
+            postgresql_where=text(
+                "external_account_id IS NOT NULL AND deleted_at IS NULL"
+            ),
         ),
     )
 
