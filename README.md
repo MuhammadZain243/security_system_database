@@ -356,7 +356,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_NAME=security_system
 DATABASE_USER=security_system
-DATABASE_PASSWORD=security_system_local_password
+DATABASE_PASSWORD='security_system_local_password'
 ```
 
 Database configuration should not be read through scattered `os.environ.get()` calls.
@@ -624,7 +624,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_NAME=security_system
 DATABASE_USER=security_system
-DATABASE_PASSWORD=security_system_local_password
+DATABASE_PASSWORD='security_system_local_password'
 
 DATABASE_SSL_MODE=disable
 DATABASE_ECHO=false
@@ -640,6 +640,15 @@ For local Docker development:
 
 ```dotenv
 DATABASE_SSL_MODE=disable
+```
+
+Quote secret values in `.env`, especially passwords. Docker Compose treats `$` as
+variable interpolation in unquoted values, so a strong password such as
+`abc$zP4xT7` can produce warnings like `variable is not set`. Use single quotes:
+
+```dotenv
+DATABASE_PASSWORD='abc$zP4xT7'
+PLATFORM_SUPER_ADMIN_PASSWORD='another$strong$password'
 ```
 
 Production environments should normally use a secure SSL mode such as:
