@@ -8,11 +8,16 @@ from security_system_database.models.mixins import (
     TimestampMixin,
     UUIDPrimaryKeyMixin,
 )
+from security_system_database.models.platform_integration_provider import (
+    PlatformIntegrationProvider,
+)
+from security_system_database.models.platform_oauth_config import PlatformOAuthConfig
 from security_system_database.models.platform_permission import PlatformPermission
 from security_system_database.models.platform_role import PlatformRole
 from security_system_database.models.platform_role_permission import (
     PlatformRolePermission,
 )
+from security_system_database.models.platform_setting import PlatformSetting
 from security_system_database.models.platform_user import PlatformUser
 from security_system_database.models.platform_user_role import PlatformUserRole
 from security_system_database.models.tenant import Tenant
@@ -27,9 +32,12 @@ __all__ = [
     "UUID_TYPE",
     "AuditActorMixin",
     "Company",
+    "PlatformIntegrationProvider",
+    "PlatformOAuthConfig",
     "PlatformPermission",
     "PlatformRole",
     "PlatformRolePermission",
+    "PlatformSetting",
     "PlatformUser",
     "PlatformUserRole",
     "ShortString",
