@@ -271,40 +271,42 @@ def upgrade() -> None:
         ],
     )
 
-    for role in PLATFORM_ROLES:
-        for permission_key in role["permission_keys"]:
-            connection.execute(
-                sa.text(
-                    """
-                    INSERT INTO platform_role_permissions (
-                        id,
-                        platform_role_id,
-                        platform_permission_id,
-                        created_at
-                    )
-                    SELECT
-                        :id,
-                        platform_roles.id,
-                        platform_permissions.id,
-                        now()
-                    FROM platform_roles, platform_permissions
-                    WHERE platform_roles.slug = :role_slug
-                      AND platform_permissions.key = :permission_key
-                    ON CONFLICT (
-                        platform_role_id,
-                        platform_permission_id
-                    ) DO NOTHING
-                    """
-                ),
-                {
-                    "id": _seed_uuid(
-                        "role-permission",
-                        f"{role['slug']}:{permission_key}",
-                    ),
-                    "role_slug": role["slug"],
-                    "permission_key": permission_key,
-                },
-            )
+    role_permission_insert = sa.text(
+        """
+        INSERT INTO platform_role_permissions (
+            id,
+            platform_role_id,
+            platform_permission_id,
+            created_at
+        )
+        SELECT
+            :id,
+            platform_roles.id,
+            platform_permissions.id,
+            now()
+        FROM platform_roles, platform_permissions
+        WHERE platform_roles.slug = :role_slug
+          AND platform_permissions.key = :permission_key
+        ON CONFLICT (
+            platform_role_id,
+            platform_permission_id
+        ) DO NOTHING
+        """
+    )
+    role_permission_rows = [
+        {
+            "id": _seed_uuid(
+                "role-permission",
+                f"{role['slug']}:{permission_key}",
+            ),
+            "role_slug": role["slug"],
+            "permission_key": permission_key,
+        }
+        for role in PLATFORM_ROLES
+        for permission_key in role["permission_keys"]
+    ]
+
+    connection.execute(role_permission_insert, role_permission_rows)
 
 
 def downgrade() -> None:

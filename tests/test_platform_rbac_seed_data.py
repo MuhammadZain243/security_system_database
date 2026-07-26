@@ -52,8 +52,12 @@ def test_every_role_permission_references_known_permission_key() -> None:
 
 def test_super_admin_role_includes_all_platform_permissions() -> None:
     permission_keys = {permission.key for permission in PLATFORM_PERMISSIONS}
-    super_admin = next(role for role in PLATFORM_ROLES if role.slug == "super-admin")
+    super_admin = next(
+        (role for role in PLATFORM_ROLES if role.slug == "super-admin"),
+        None,
+    )
 
+    assert super_admin is not None
     assert set(super_admin.permission_keys) == permission_keys
 
 
