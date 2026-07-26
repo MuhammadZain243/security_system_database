@@ -32,7 +32,7 @@ class PlatformEmailVerificationToken(Base, UUIDPrimaryKeyMixin):
         ForeignKey(
             "platform_users.id",
             name="fk_platform_email_verification_tokens_platform_user_id",
-            ondelete="CASCADE",
+            ondelete="RESTRICT",
         ),
         nullable=False,
     )

@@ -46,7 +46,7 @@ class PlatformUserSession(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         ForeignKey(
             "platform_users.id",
             name="fk_platform_user_sessions_platform_user_id",
-            ondelete="CASCADE",
+            ondelete="RESTRICT",
         ),
         nullable=False,
     )

@@ -153,7 +153,7 @@ def test_platform_user_session_columns_constraints_indexes_and_foreign_key() -> 
 
     assert platform_user_fk.name == "fk_platform_user_sessions_platform_user_id"
     assert platform_user_fk.target_fullname == "platform_users.id"
-    assert platform_user_fk.ondelete == "CASCADE"
+    assert platform_user_fk.ondelete == "RESTRICT"
 
 
 def test_platform_refresh_token_columns_constraints_indexes_and_foreign_keys() -> None:
@@ -201,7 +201,7 @@ def test_platform_refresh_token_columns_constraints_indexes_and_foreign_keys() -
 
     assert platform_user_fk.name == "fk_platform_refresh_tokens_platform_user_id"
     assert platform_user_fk.target_fullname == "platform_users.id"
-    assert platform_user_fk.ondelete == "CASCADE"
+    assert platform_user_fk.ondelete == "RESTRICT"
     assert _foreign_key_constraint_targets(session_fk) == (
         ("platform_user_id", "session_id"),
         ("platform_user_sessions.platform_user_id", "platform_user_sessions.id"),
@@ -241,7 +241,7 @@ def test_platform_password_reset_token_columns_constraints_indexes_and_foreign_k
 
     assert platform_user_fk.name == "fk_platform_password_reset_tokens_platform_user_id"
     assert platform_user_fk.target_fullname == "platform_users.id"
-    assert platform_user_fk.ondelete == "CASCADE"
+    assert platform_user_fk.ondelete == "RESTRICT"
 
 
 def test_platform_email_verification_token_columns_constraints_indexes_and_foreign_key() -> (
@@ -279,7 +279,7 @@ def test_platform_email_verification_token_columns_constraints_indexes_and_forei
         == "fk_platform_email_verification_tokens_platform_user_id"
     )
     assert platform_user_fk.target_fullname == "platform_users.id"
-    assert platform_user_fk.ondelete == "CASCADE"
+    assert platform_user_fk.ondelete == "RESTRICT"
 
 
 def test_platform_auth_event_columns_constraints_indexes_and_foreign_key() -> None:

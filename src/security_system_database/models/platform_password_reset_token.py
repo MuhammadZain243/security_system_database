@@ -32,7 +32,7 @@ class PlatformPasswordResetToken(Base, UUIDPrimaryKeyMixin):
         ForeignKey(
             "platform_users.id",
             name="fk_platform_password_reset_tokens_platform_user_id",
-            ondelete="CASCADE",
+            ondelete="RESTRICT",
         ),
         nullable=False,
     )
