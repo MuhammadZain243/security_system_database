@@ -1,6 +1,11 @@
 """Tests for tenant user and RBAC foundation models."""
 
-from sqlalchemy import CheckConstraint, ForeignKey, UniqueConstraint
+from sqlalchemy import (
+    CheckConstraint,
+    ForeignKey,
+    ForeignKeyConstraint,
+    UniqueConstraint,
+)
 
 from security_system_database import Base
 from security_system_database.models import (
@@ -50,6 +55,31 @@ def _foreign_key_constraint_names(table_name: str) -> set[str]:
         constraint.name or ""
         for constraint in Base.metadata.tables[table_name].foreign_key_constraints
     }
+
+
+def _foreign_key_constraint_by_name(
+    table_name: str,
+    constraint_name: str,
+) -> ForeignKeyConstraint:
+    matching_constraints = [
+        constraint
+        for constraint in Base.metadata.tables[table_name].foreign_key_constraints
+        if constraint.name == constraint_name
+    ]
+
+    assert len(matching_constraints) == 1
+
+    return matching_constraints[0]
+
+
+def _foreign_key_constraint_targets(
+    constraint: ForeignKeyConstraint,
+) -> tuple[tuple[str, ...], tuple[str, ...], set[str | None]]:
+    return (
+        tuple(constraint.columns.keys()),
+        tuple(element.target_fullname for element in constraint.elements),
+        {element.ondelete for element in constraint.elements},
+    )
 
 
 def test_tenant_user_rbac_tables_are_registered() -> None:
@@ -166,6 +196,20 @@ def test_user_role_assignment_constraints_and_foreign_keys() -> None:
     assert "fk_user_roles_tenant_id" in foreign_key_constraints
     assert "fk_user_roles_tenant_user" in foreign_key_constraints
     assert "fk_user_roles_tenant_role" in foreign_key_constraints
+    assert _foreign_key_constraint_targets(
+        _foreign_key_constraint_by_name("user_roles", "fk_user_roles_tenant_user")
+    ) == (
+        ("tenant_id", "user_id"),
+        ("users.tenant_id", "users.id"),
+        {"CASCADE"},
+    )
+    assert _foreign_key_constraint_targets(
+        _foreign_key_constraint_by_name("user_roles", "fk_user_roles_tenant_role")
+    ) == (
+        ("tenant_id", "role_id"),
+        ("roles.tenant_id", "roles.id"),
+        {"CASCADE"},
+    )
 
 
 def test_role_permission_assignment_constraints_and_foreign_keys() -> None:
@@ -186,6 +230,16 @@ def test_role_permission_assignment_constraints_and_foreign_keys() -> None:
 
     assert "fk_role_permissions_tenant_id" in foreign_key_constraints
     assert "fk_role_permissions_tenant_role" in foreign_key_constraints
+    assert _foreign_key_constraint_targets(
+        _foreign_key_constraint_by_name(
+            "role_permissions",
+            "fk_role_permissions_tenant_role",
+        )
+    ) == (
+        ("tenant_id", "role_id"),
+        ("roles.tenant_id", "roles.id"),
+        {"CASCADE"},
+    )
     assert permission_fk.name == "fk_role_permissions_permission_id"
     assert permission_fk.target_fullname == "permissions.id"
     assert permission_fk.ondelete == "CASCADE"
