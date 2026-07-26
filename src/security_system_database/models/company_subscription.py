@@ -53,7 +53,11 @@ class CompanySubscription(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteM
         ),
         nullable=False,
     )
-    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    status: Mapped[str] = mapped_column(
+        String(32),
+        server_default=text("'active'"),
+        nullable=False,
+    )
     started_at: Mapped[datetime] = mapped_column(DATETIME_TIMEZONE, nullable=False)
     trial_ends_at: Mapped[datetime | None] = mapped_column(
         DATETIME_TIMEZONE,

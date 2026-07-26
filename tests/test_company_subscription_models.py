@@ -1,6 +1,7 @@
 """Tests for company subscription and add-on assignment models."""
 
 from sqlalchemy import CheckConstraint, ForeignKey
+from sqlalchemy.dialects import postgresql
 
 from security_system_database import Base
 from security_system_database.models import CompanyAddOn, CompanySubscription
@@ -24,6 +25,18 @@ def _index_by_name(table_name: str, index_name: str):
     table = Base.metadata.tables[table_name]
 
     return next(index for index in table.indexes if index.name == index_name)
+
+
+def _postgresql_where_text(index) -> str:
+    where_clause = index.dialect_options["postgresql"]["where"]
+
+    assert where_clause is not None
+    return str(
+        where_clause.compile(
+            dialect=postgresql.dialect(),
+            compile_kwargs={"literal_binds": True},
+        )
+    )
 
 
 def test_company_subscription_assignment_tables_are_registered() -> None:
@@ -72,7 +85,11 @@ def test_company_subscription_columns_constraints_indexes_and_partial_unique() -
 
     assert partial_unique_index.unique is True
     assert tuple(partial_unique_index.columns.keys()) == ("company_id",)
-    assert partial_unique_index.dialect_options["postgresql"]["where"] is not None
+    where_text = _postgresql_where_text(partial_unique_index)
+
+    assert "trialing" in where_text
+    assert "active" in where_text
+    assert table.c.status.server_default is not None
 
 
 def test_company_subscription_references_company_and_subscription_plan() -> None:
@@ -123,7 +140,10 @@ def test_company_add_on_columns_constraints_indexes_and_partial_unique() -> None
 
     assert partial_unique_index.unique is True
     assert tuple(partial_unique_index.columns.keys()) == ("company_id", "add_on_id")
-    assert partial_unique_index.dialect_options["postgresql"]["where"] is not None
+    where_text = _postgresql_where_text(partial_unique_index)
+
+    assert "status = 'active'" in where_text
+    assert table.c.status.server_default is not None
 
 
 def test_company_add_on_references_company_and_add_on() -> None:

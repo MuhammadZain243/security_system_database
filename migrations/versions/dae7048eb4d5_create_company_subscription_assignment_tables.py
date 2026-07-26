@@ -25,7 +25,12 @@ def upgrade() -> None:
         "company_add_ons",
         sa.Column("company_id", sa.UUID(), nullable=False),
         sa.Column("add_on_id", sa.UUID(), nullable=False),
-        sa.Column("status", sa.String(length=32), nullable=False),
+        sa.Column(
+            "status",
+            sa.String(length=32),
+            server_default=sa.text("'active'"),
+            nullable=False,
+        ),
         sa.Column("started_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column(
             "current_period_starts_at", sa.DateTime(timezone=True), nullable=True
@@ -85,7 +90,12 @@ def upgrade() -> None:
         "company_subscriptions",
         sa.Column("company_id", sa.UUID(), nullable=False),
         sa.Column("subscription_plan_id", sa.UUID(), nullable=False),
-        sa.Column("status", sa.String(length=32), nullable=False),
+        sa.Column(
+            "status",
+            sa.String(length=32),
+            server_default=sa.text("'active'"),
+            nullable=False,
+        ),
         sa.Column("started_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("trial_ends_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column(
