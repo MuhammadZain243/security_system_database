@@ -57,6 +57,8 @@ def test_module_table_does_not_include_tenant_id() -> None:
 
 
 def test_module_constraints_and_indexes() -> None:
+    table = Base.metadata.tables["modules"]
+
     assert ("key",) in _unique_constraint_columns("modules")
     assert "ck_modules_key_lowercase" in _check_constraint_names("modules")
     assert "ck_modules_module_group_valid" in _check_constraint_names("modules")
@@ -65,3 +67,9 @@ def test_module_constraints_and_indexes() -> None:
     assert "ix_modules_status" in _index_names("modules")
     assert "ix_modules_is_plan_assignable" in _index_names("modules")
     assert "ix_modules_is_add_on" in _index_names("modules")
+    assert table.c.status.nullable is False
+    assert table.c.status.server_default is not None
+    assert table.c.is_plan_assignable.nullable is False
+    assert table.c.is_plan_assignable.server_default is not None
+    assert table.c.is_add_on.nullable is False
+    assert table.c.is_add_on.server_default is not None

@@ -27,7 +27,12 @@ def upgrade() -> None:
         sa.Column("name", sa.String(length=160), nullable=False),
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column("module_group", sa.String(length=32), nullable=False),
-        sa.Column("status", sa.String(length=32), nullable=False),
+        sa.Column(
+            "status",
+            sa.String(length=32),
+            server_default=sa.text("'active'"),
+            nullable=False,
+        ),
         sa.Column(
             "is_plan_assignable",
             sa.Boolean(),
