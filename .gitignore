@@ -2,8 +2,6 @@
 .venv/
 
 # Environment secrets
-.env
-.env.*
 !.env.example
 
 # Python cache
@@ -27,9 +25,10 @@ dist/
 *.egg-info/
 
 # IDE configuration
-.vscode/
 .idea/
 
 # Operating system
 .DS_Store
 Thumbs.db
+config.bat
+node_modules

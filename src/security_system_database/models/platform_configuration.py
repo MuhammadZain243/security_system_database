@@ -98,6 +98,7 @@ class PlatformConfiguration(
         server_default=text("'{}'::jsonb"),
         nullable=False,
     )
+    encrypted_value: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(
         String(32),
         server_default=text("'needs_setup'"),
