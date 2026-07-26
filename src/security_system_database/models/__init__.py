@@ -15,6 +15,7 @@ from security_system_database.models.mixins import (
 from security_system_database.models.module import Module
 from security_system_database.models.permission import Permission
 from security_system_database.models.platform_auth_event import PlatformAuthEvent
+from security_system_database.models.platform_configuration import PlatformConfiguration
 from security_system_database.models.platform_email_verification_token import (
     PlatformEmailVerificationToken,
 )
@@ -74,6 +75,7 @@ __all__ = [
     "Module",
     "Permission",
     "PlatformAuthEvent",
+    "PlatformConfiguration",
     "PlatformEmailVerificationToken",
     "PlatformIntegrationConnection",
     "PlatformIntegrationProvider",
