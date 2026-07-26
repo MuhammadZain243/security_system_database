@@ -104,6 +104,13 @@ def upgrade() -> None:
         ["status"],
         unique=False,
     )
+    op.create_index(
+        "uq_platform_user_invitations_one_pending_per_email",
+        "platform_user_invitations",
+        ["email"],
+        unique=True,
+        postgresql_where=sa.text("status = 'pending'"),
+    )
     op.create_table(
         "platform_user_invitation_roles",
         sa.Column("platform_user_invitation_id", sa.UUID(), nullable=False),
@@ -161,6 +168,11 @@ def downgrade() -> None:
         table_name="platform_user_invitation_roles",
     )
     op.drop_table("platform_user_invitation_roles")
+    op.drop_index(
+        "uq_platform_user_invitations_one_pending_per_email",
+        table_name="platform_user_invitations",
+        postgresql_where=sa.text("status = 'pending'"),
+    )
     op.drop_index(
         "ix_platform_user_invitations_status", table_name="platform_user_invitations"
     )

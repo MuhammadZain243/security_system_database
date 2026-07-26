@@ -33,6 +33,18 @@ def _index_names(table_name: str) -> set[str]:
     return {index.name for index in Base.metadata.tables[table_name].indexes}
 
 
+def _index_by_name(table_name: str, index_name: str):
+    matching_indexes = [
+        index
+        for index in Base.metadata.tables[table_name].indexes
+        if index.name == index_name
+    ]
+
+    assert len(matching_indexes) == 1
+
+    return matching_indexes[0]
+
+
 def _foreign_key_by_column(table_name: str, column_name: str) -> ForeignKey:
     foreign_keys = list(Base.metadata.tables[table_name].c[column_name].foreign_keys)
 
@@ -91,6 +103,16 @@ def test_platform_user_invitation_columns_constraints_indexes_and_tokens() -> No
     )
     assert "ix_platform_user_invitations_accepted_platform_user_id" in _index_names(
         "platform_user_invitations"
+    )
+    pending_email_index = _index_by_name(
+        "platform_user_invitations",
+        "uq_platform_user_invitations_one_pending_per_email",
+    )
+
+    assert pending_email_index.unique
+    assert tuple(pending_email_index.columns.keys()) == ("email",)
+    assert str(pending_email_index.dialect_options["postgresql"]["where"]) == (
+        "status = 'pending'"
     )
     assert table.c.status.server_default is not None
     _assert_no_raw_token_columns("platform_user_invitations")
