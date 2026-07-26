@@ -310,6 +310,18 @@ uv run pytest tests/test_package.py
 
 ## 8. Seed Verification Commands
 
+### Seed Platform Super Admin
+
+```powershell
+.\scripts\seed-platform-super-admin.ps1
+```
+
+### Check platform Super Admin users
+
+```powershell
+docker compose exec postgres psql -U postgres -d security_system -c "SELECT email, status, is_super_admin FROM platform_users;"
+```
+
 ### Check platform permissions
 
 ```powershell
