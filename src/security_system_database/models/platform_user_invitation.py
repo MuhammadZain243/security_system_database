@@ -43,6 +43,12 @@ class PlatformUserInvitation(Base, UUIDPrimaryKeyMixin, TimestampMixin):
             "invited_by_platform_user_id",
         ),
         Index("ix_platform_user_invitations_status", "status"),
+        Index(
+            "uq_platform_user_invitations_one_pending_per_email",
+            "email",
+            unique=True,
+            postgresql_where=text("status = 'pending'"),
+        ),
     )
 
     email: Mapped[str] = mapped_column(String(320), nullable=False)
