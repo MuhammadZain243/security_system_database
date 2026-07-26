@@ -53,9 +53,6 @@ def upgrade() -> None:
         ["category"],
         unique=False,
     )
-    op.create_index(
-        "ix_platform_permissions_key", "platform_permissions", ["key"], unique=False
-    )
     op.create_table(
         "platform_roles",
         sa.Column("name", sa.String(length=120), nullable=False),
@@ -85,7 +82,6 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id", name=op.f("pk_platform_roles")),
         sa.UniqueConstraint("slug", name="uq_platform_roles_slug"),
     )
-    op.create_index("ix_platform_roles_slug", "platform_roles", ["slug"], unique=False)
     op.create_table(
         "platform_users",
         sa.Column("email", sa.String(length=320), nullable=False),
@@ -119,9 +115,6 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_platform_users")),
         sa.UniqueConstraint("email", name="uq_platform_users_email"),
-    )
-    op.create_index(
-        "ix_platform_users_email", "platform_users", ["email"], unique=False
     )
     op.create_index(
         "ix_platform_users_status", "platform_users", ["status"], unique=False
@@ -235,11 +228,8 @@ def downgrade() -> None:
     )
     op.drop_table("platform_role_permissions")
     op.drop_index("ix_platform_users_status", table_name="platform_users")
-    op.drop_index("ix_platform_users_email", table_name="platform_users")
     op.drop_table("platform_users")
-    op.drop_index("ix_platform_roles_slug", table_name="platform_roles")
     op.drop_table("platform_roles")
-    op.drop_index("ix_platform_permissions_key", table_name="platform_permissions")
     op.drop_index("ix_platform_permissions_category", table_name="platform_permissions")
     op.drop_table("platform_permissions")
     # ### end Alembic commands ###

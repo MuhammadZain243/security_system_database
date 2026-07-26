@@ -3,7 +3,6 @@
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
-    Index,
     String,
     Text,
     UniqueConstraint,
@@ -26,7 +25,6 @@ class PlatformRole(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin):
     __table_args__ = (
         CheckConstraint("slug = lower(slug)", name="platform_roles_slug_lowercase"),
         UniqueConstraint("slug", name="uq_platform_roles_slug"),
-        Index("ix_platform_roles_slug", "slug"),
     )
 
     name: Mapped[str] = mapped_column(String(120), nullable=False)

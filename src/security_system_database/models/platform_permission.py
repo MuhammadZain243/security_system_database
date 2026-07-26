@@ -15,7 +15,6 @@ class PlatformPermission(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         CheckConstraint("key = lower(key)", name="platform_permissions_key_lowercase"),
         UniqueConstraint("key", name="uq_platform_permissions_key"),
         Index("ix_platform_permissions_category", "category"),
-        Index("ix_platform_permissions_key", "key"),
     )
 
     key: Mapped[str] = mapped_column(String(160), nullable=False)

@@ -61,19 +61,18 @@ def test_platform_user_table_columns_and_constraints() -> None:
         "deleted_at",
     }.issubset(table.columns.keys())
     assert ("email",) in _unique_constraint_columns("platform_users")
-    assert "ix_platform_users_email" in _index_names("platform_users")
+    assert "ix_platform_users_status" in _index_names("platform_users")
     assert "plain_password" not in table.columns
     assert "password" not in table.columns
 
 
 def test_platform_role_slug_is_unique() -> None:
     assert ("slug",) in _unique_constraint_columns("platform_roles")
-    assert "ix_platform_roles_slug" in _index_names("platform_roles")
 
 
 def test_platform_permission_key_is_unique() -> None:
     assert ("key",) in _unique_constraint_columns("platform_permissions")
-    assert "ix_platform_permissions_key" in _index_names("platform_permissions")
+    assert "ix_platform_permissions_category" in _index_names("platform_permissions")
 
 
 def test_platform_user_roles_prevent_duplicate_assignments() -> None:

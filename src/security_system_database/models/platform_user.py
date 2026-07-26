@@ -24,7 +24,6 @@ class PlatformUser(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin):
             name="platform_users_status_valid",
         ),
         UniqueConstraint("email", name="uq_platform_users_email"),
-        Index("ix_platform_users_email", "email"),
         Index("ix_platform_users_status", "status"),
     )
 
