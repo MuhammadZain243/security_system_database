@@ -3,6 +3,8 @@
 from security_system_database.models.add_on import AddOn
 from security_system_database.models.add_on_module import AddOnModule
 from security_system_database.models.company import Company
+from security_system_database.models.company_add_on import CompanyAddOn
+from security_system_database.models.company_subscription import CompanySubscription
 from security_system_database.models.mixins import (
     AuditActorMixin,
     SoftDeleteMixin,
@@ -44,6 +46,8 @@ __all__ = [
     "AddOnModule",
     "AuditActorMixin",
     "Company",
+    "CompanyAddOn",
+    "CompanySubscription",
     "Module",
     "PlatformIntegrationProvider",
     "PlatformOAuthConfig",
