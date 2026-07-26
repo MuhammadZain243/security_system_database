@@ -74,6 +74,7 @@ def test_platform_configuration_columns_and_json_storage() -> None:
         "description",
         "integration_connection_id",
         "value",
+        "encrypted_value",
         "status",
         "is_default",
         "is_sensitive",
@@ -86,6 +87,7 @@ def test_platform_configuration_columns_and_json_storage() -> None:
     assert not table.c.key.nullable
     assert not table.c.name.nullable
     assert isinstance(table.c.value.type, JSONB)
+    assert str(table.c.encrypted_value.type) == "TEXT"
     assert isinstance(table.c.metadata.type, JSONB)
     assert table.c.value.server_default is not None
     assert table.c.metadata.server_default is not None

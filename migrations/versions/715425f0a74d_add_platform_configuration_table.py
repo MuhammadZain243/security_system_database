@@ -35,6 +35,7 @@ def upgrade() -> None:
             server_default=sa.text("'{}'::jsonb"),
             nullable=False,
         ),
+        sa.Column("encrypted_value", sa.Text(), nullable=True),
         sa.Column(
             "status",
             sa.String(length=32),
