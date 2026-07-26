@@ -90,6 +90,10 @@ def test_platform_integration_connection_constraints_and_indexes() -> None:
         "ck_platform_integration_connections_status_valid"
         in _check_constraint_names(table_name)
     )
+    assert (
+        "ck_platform_integration_connections_external_account_email_lowercase"
+        in _check_constraint_names(table_name)
+    )
     assert "ix_platform_integration_connections_provider_id" in _index_names(table_name)
     assert "ix_platform_integration_connections_connected_by_user_id" in _index_names(
         table_name
@@ -113,7 +117,7 @@ def test_platform_integration_connection_constraints_and_indexes() -> None:
         "external_account_id",
     )
     assert str(provider_account_index.dialect_options["postgresql"]["where"]) == (
-        "external_account_id IS NOT NULL"
+        "external_account_id IS NOT NULL AND deleted_at IS NULL"
     )
 
 
