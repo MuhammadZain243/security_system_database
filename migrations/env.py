@@ -4,6 +4,7 @@ from logging.config import fileConfig
 
 from alembic import context
 
+import security_system_database.models  # noqa: F401
 from security_system_database import Base, DatabaseSettings, build_engine
 
 config = context.config
