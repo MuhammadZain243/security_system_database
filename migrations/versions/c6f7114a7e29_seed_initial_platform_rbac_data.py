@@ -7,7 +7,7 @@ Create Date: 2026-07-26 15:42:58.996456
 """
 
 from collections.abc import Sequence
-from uuid import NAMESPACE_URL, uuid5
+from uuid import NAMESPACE_URL, UUID, uuid5
 
 import sqlalchemy as sa
 from alembic import op
@@ -180,12 +180,10 @@ PLATFORM_ROLES = (
 )
 
 
-def _seed_uuid(kind: str, value: str) -> str:
-    return str(
-        uuid5(
-            NAMESPACE_URL,
-            f"https://security-system.local/seed/platform-rbac/{kind}/{value}",
-        )
+def _seed_uuid(kind: str, value: str) -> UUID:
+    return uuid5(
+        NAMESPACE_URL,
+        f"https://security-system.local/seed/platform-rbac/{kind}/{value}",
     )
 
 
@@ -314,34 +312,19 @@ def downgrade() -> None:
 
     connection = op.get_bind()
 
-    for role in PLATFORM_ROLES:
-        for permission_key in role["permission_keys"]:
-            connection.execute(
-                sa.text(
-                    """
-                    DELETE FROM platform_role_permissions
-                    WHERE platform_role_id = (
-                        SELECT id FROM platform_roles WHERE slug = :role_slug
-                    )
-                    AND platform_permission_id = (
-                        SELECT id FROM platform_permissions WHERE key = :permission_key
-                    )
-                    """
-                ),
-                {
-                    "role_slug": role["slug"],
-                    "permission_key": permission_key,
-                },
+    connection.execute(
+        sa.text("DELETE FROM platform_roles WHERE slug IN :role_slugs").bindparams(
+            sa.bindparam("role_slugs", expanding=True)
+        ),
+        {"role_slugs": tuple(role["slug"] for role in PLATFORM_ROLES)},
+    )
+    connection.execute(
+        sa.text(
+            "DELETE FROM platform_permissions WHERE key IN :permission_keys"
+        ).bindparams(sa.bindparam("permission_keys", expanding=True)),
+        {
+            "permission_keys": tuple(
+                permission["key"] for permission in PLATFORM_PERMISSIONS
             )
-
-    for role in PLATFORM_ROLES:
-        connection.execute(
-            sa.text("DELETE FROM platform_roles WHERE slug = :slug"),
-            {"slug": role["slug"]},
-        )
-
-    for permission in PLATFORM_PERMISSIONS:
-        connection.execute(
-            sa.text("DELETE FROM platform_permissions WHERE key = :key"),
-            {"key": permission["key"]},
-        )
+        },
+    )
